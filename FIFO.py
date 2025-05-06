@@ -1,74 +1,75 @@
+print("Enter the number of frames: ", end="")
+
 # Python3 implementation of FIFO page 
-# replacement in Operating Systems. 
-from queue import Queue 
+# replacement in Operating Systems.
+from queue import Queue
 
-# Function to find page faults using FIFO 
-def pageFaults(pages, n, capacity): 
-	
-	# To represent set of current pages. 
-	# We use an unordered_set so that we 
-	# quickly check if a page is present 
-	# in set or not 
-	s = set() 
+# Function to find page faults using FIFO
+def pageFaults(incomingStream, n, frames):
+    print("Incoming \t Pages")
+    # Using hashset to quickly check if a given
+    # incoming stream item is in set or not
+    s = set()
 
-	# To store the pages in FIFO manner 
-	indexes = Queue() 
+    # Queue created to store pages in FIFO manner
+    # since set will not store order of entry
+    # we will use queue to note order of entry of incoming pages
+    queue = Queue()
 
-	# Start from initial page 
-	page_faults = 0
-	for i in range(n): 
-		
-		# Check if the set can hold 
-		# more pages 
-		if (len(s) < capacity): 
-			
-			# Insert it into set if not present 
-			# already which represents page fault 
-			if (pages[i] not in s): 
-				s.add(pages[i]) 
+    page_faults = 0
+    for i in range(n):
 
-				# increment page fault 
-				page_faults += 1
+        # if set has lesser item than frames
+        # i.e. set can hold more items
+        if len(s) < frames:
 
-				# Push the current page into 
-				# the queue 
-				indexes.put(pages[i]) 
+            # If incoming item is not present, add to set
+            if incomingStream[i] not in s:
+                s.add(incomingStream[i])
 
-		# If the set is full then need to perform FIFO 
-		# i.e. remove the first page of the queue from 
-		# set and queue both and insert the current page 
-		else: 
-			
-			# Check if current page is not 
-			# already present in the set 
-			if (pages[i] not in s): 
-				
-				# Pop the first page from the queue 
-				val = indexes.queue[0] 
+                # increment page fault
+                page_faults += 1
 
-				indexes.get() 
+                # Push the incoming page into the queue
+                queue.put(incomingStream[i])
 
-				# Remove the indexes page 
-				s.remove(val) 
+        # If the set is full then we need to do page replacement
+        # FIFO manner that is remove first item from both
+        # queue and set then insert incoming page
+        else:
+            if incomingStream[i] not in s:
 
-				# insert the current page 
-				s.add(pages[i]) 
+                # remove the first page from the queue
+                val = queue.get()
 
-				# push the current page into 
-				# the queue 
-				indexes.put(pages[i]) 
+                # remove from set
+                s.remove(val)
 
-				# Increment page faults 
-				page_faults += 1
+                # add incoming page to set
+                s.add(incomingStream[i])
 
-	return page_faults 
+                # push incoming page to queue
+                queue.put(incomingStream[i])
 
-# Driver code 
-if __name__ == '__main__': 
-	pages = [7, 0, 1, 2, 0, 3, 0, 
-				4, 2, 3, 0, 3, 2] 
-	n = len(pages) 
-	capacity = 4
-	print(pageFaults(pages, n, capacity)) 
+                # increment page faults
+                page_faults += 1
 
-# This code is contributed by PranchalK 
+        print(incomingStream[i], end="\t\t")
+        for item in list(queue.queue):
+            print(item, end=" ")
+        print()
+
+    return page_faults
+
+# Driver code
+incomingStream = [1, 2, 3, 4, 2, 1, 5, 2, 1, 3, 2, 1, 5, 4]
+n = len(incomingStream)
+frames = 4
+page_faults = pageFaults(incomingStream, n, frames)
+hits = n - page_faults
+hit_rate = (hits / n) * 100
+
+print("\nPage Faults: " + str(page_faults))
+print("Hits: " + str(hits))
+print(f"Hit Rate: {hit_rate:.2f}%")
+
