@@ -39,19 +39,21 @@ def simulate_optimal(trace, cache_size):
 if __name__ == "__main__":
     random.seed(42)  # For reproducibility
     # trace = [random.randint(1, 10) for _ in range(30)]
-    trace = [1, 2, 3, 2, 4, 1, 5, 2, 1, 4, 3, 2, 1, 5, 4]
-    cache_size = 4
+    with open("./data.txt", 'r') as data:
+        
+        trace = data.read().split('\n')[:10000]
+        cache_size = 2000
 
-    page_faults, total_hits, hit_rate, hit_rate_progress = simulate_optimal(
+        page_faults, total_hits, hit_rate, hit_rate_progress = simulate_optimal(
         trace, cache_size)
 
     # Print summary
-    print("Optimal Page Replacement Simulation")
-    print(f"Access Trace: {trace}")
-    print(f"Cache Size: {cache_size}")
-    print(f"Page Faults: {page_faults}")
-    print(f"Total Hits: {total_hits}")
-    print(f"Hit Rate: {hit_rate:.2f}%")
+        print("Optimal Page Replacement Simulation")
+        print(f"Access Trace: {trace}")
+        print(f"Cache Size: {cache_size}")
+        print(f"Page Faults: {page_faults}")
+        print(f"Total Hits: {total_hits}")
+        print(f"Hit Rate: {hit_rate:.2f}%")
 
     # Plot hit rate progression
     plt.figure(figsize=(8, 4))

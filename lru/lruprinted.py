@@ -154,18 +154,19 @@ class lru_1():
         return (self._hits, self._misses)
     
 if __name__ == "__main__":
-    s = 90
+    s = 2000
     cache = lru_1(size=s)
+    with open("../data.txt", 'r') as twitter:
+        data = twitter.read().split('\n')
+        print(len(data))
+        t = time.time_ns()
 
+        for i in range(10000):
+            new_value = int(data[i])
+            cache.get(new_value)
+            cache.set(new_value, new_value)
 
-    t = time.time_ns()
-
-    for i in range(50000):
-        new_value = numpy.random.uniform(0,100)
-        cache.get(new_value)
-        cache.set(new_value, new_value)
-
-    print((time.time_ns() - t) / 1e9)
-    print(f"Hits: {cache.stats[0]}")
-    print(f"misses: {cache.stats[1]}")
-    print(f"Hit ratio: {cache.stats[0] / cache.stats[1]}:1")
+        print((time.time_ns() - t) / 1e9)
+        print(f"Hits: {cache.stats[0]}")
+        print(f"misses: {cache.stats[1]}")
+        print(f"Hit ratio: {cache.stats[0] / (cache.stats[0]+cache.stats[1])}:1")

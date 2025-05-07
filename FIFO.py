@@ -54,22 +54,23 @@ def pageFaults(incomingStream, n, frames):
                 # increment page faults
                 page_faults += 1
 
-        print(incomingStream[i], end="\t\t")
-        for item in list(queue.queue):
-            print(item, end=" ")
-        print()
+        #print(incomingStream[i], end="\t\t")
+        #for item in list(queue.queue):
+            #print(item, end=" ")
+        #print()
 
     return page_faults
 
 # Driver code
-incomingStream = [1, 2, 3, 4, 2, 1, 5, 2, 1, 3, 2, 1, 5, 4]
-n = len(incomingStream)
-frames = 4
-page_faults = pageFaults(incomingStream, n, frames)
-hits = n - page_faults
-hit_rate = (hits / n) * 100
+with open("./data.txt", 'r') as data:
+    incomingStream = data.read().split("\n")
+    n = 10000
+    frames = 2000
+    page_faults = pageFaults(incomingStream, n, frames)
+    hits = n - page_faults
+    hit_rate = (hits / n) * 100
 
-print("\nPage Faults: " + str(page_faults))
-print("Hits: " + str(hits))
-print(f"Hit Rate: {hit_rate:.2f}%")
+    print("\nPage Faults: " + str(page_faults))
+    print("Hits: " + str(hits))
+    print(f"Hit Rate: {hit_rate:.2f}%")
 

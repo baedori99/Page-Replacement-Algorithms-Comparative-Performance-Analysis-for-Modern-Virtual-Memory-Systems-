@@ -46,21 +46,22 @@ def simulate(cache_class, name, sequence, frame_size):
             hits += 1
         else:
             faults += 1
-        print(f"[Step {i}] Access: {page} => {result}")
-        print(f"Frames: {state}")
+        #print(f"[Step {i}] Access: {page} => {result}")
+        #print(f"Frames: {state}")
 
     total = hits + faults
-    hit_rate = hits / total * 100
+    hit_rate = hits / total
     print(f"\n{name} Result:")
     print(f"Total Hits: {hits}")
     print(f"Total Faults: {faults}")
-    print(f"Hit Rate: {hit_rate:.2f}%")
+    print(f"Hit Rate: {hit_rate}%")
     print("-" * 40)
 
 
 # 실행
-access_sequence = [1, 2, 3, 2, 4, 1, 5, 2, 1, 4, 3, 2, 1, 5, 4]
+with open("./data.txt", 'r') as data:
+    access_sequence = data.read().split('\n')
 
-frame_size = 4
+    frame_size = 2000
 
-simulate(TACClockCache, "TA-CLOCK", access_sequence, frame_size)
+    simulate(TACClockCache, "TA-CLOCK", access_sequence[:10000], frame_size)
